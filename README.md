@@ -1,6 +1,6 @@
 # Genomic Music – Interactive DNA-to-Music Demo
 
-An interactive, client-side experience that transforms DNA sequences into music. Runs entirely in the browser with realistic hardcoded data—no backend required.
+An interactive, client-side experience that transforms DNA sequences into music. Runs entirely in the browser with realistic hardcoded data no backend required.
 
 ## What It Does
 - Choose species and genes.
