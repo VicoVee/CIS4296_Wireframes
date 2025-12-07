@@ -52,7 +52,7 @@
             margin-left: 2px;
         }
 
-        /* Radial Progress Bar (Kept for consistency on previous pages if needed) */
+        /* Radial Progress Bar */
         .logo-progress-container {
             position: relative;
             width: 70px;
@@ -167,58 +167,6 @@
             flex-direction: column;
         }
 
-        /* New Layout for Steps with Sidebar */
-        .wizard-layout-sidebar {
-            display: flex;
-            width: 100%;
-            flex-grow: 1;
-            gap: 2rem;
-            position: relative;
-        }
-
-        .progress-sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-top: 2rem;
-        }
-
-        .progress-step-item {
-            background-color: #aaa;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 4px;
-            font-weight: 500;
-            text-align: center;
-            cursor: default;
-        }
-        
-        .progress-step-item.active {
-            background-color: #888; /* Darker gray for active */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        /* Curved background effect for Sidebar Area (Visual Flourish from wireframe) */
-        .sidebar-bg-curve {
-            position: absolute;
-            left: -200px;
-            top: 0;
-            bottom: 0;
-            width: 500px;
-            background-color: #e9ecef;
-            border-radius: 0 50% 50% 0;
-            z-index: -1;
-            opacity: 0.5;
-        }
-        
-        .wizard-content-area {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
         .wizard-header {
             text-align: center;
             margin-bottom: 2rem;
@@ -270,7 +218,7 @@
         }
         
         .toggle-option.active {
-            background-color: #7a6aa6; /* Muted purple */
+            background-color: #7a6aa6;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -347,7 +295,7 @@
         .arrow-left { left: 10%; }
         .arrow-right { right: 10%; }
 
-        /* --- Step 2: Species Grid/List --- */
+        /* --- Step 2: Species --- */
         .species-grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -377,15 +325,13 @@
         .list-item { background: #e9ecef; margin-bottom: 1rem; padding: 1rem; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; transition: background 0.2s; }
         .list-item:hover { background: #dee2e6; }
         .list-item-left { display: flex; align-items: center; gap: 15px; width: 100%; cursor: pointer;}
-        
         .custom-checkbox { width: 24px; height: 24px; background: white; border: 2px solid #999; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
         .custom-checkbox.checked { background: var(--accent-purple); border-color: var(--accent-purple); }
         .custom-checkbox.checked::after { content: '✔'; color: white; font-size: 14px; }
-        
         .btn-view-details { background: #333; color: white; border: none; padding: 0.4rem 1rem; border-radius: 4px; font-size: 0.85rem; white-space: nowrap; }
         .preview-img-large { width: 200px; height: 200px; border: 3px solid #333; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
 
-        /* --- Step 3: Genes Styles --- */
+        /* --- Step 3: Genes --- */
         .gene-grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -396,74 +342,99 @@
 
         .gene-card {
             background-color: #d9d9d9;
-            border-radius: 50px; /* Pill shape */
+            border-radius: 50px;
             padding: 1.5rem;
             cursor: pointer;
             transition: all 0.2s;
             border: 2px solid transparent;
         }
-
         .gene-card:hover { background-color: #ccc; }
-        
-        /* Single Select Style */
-        .gene-card.selected {
-            background-color: #d0d0d0;
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
-        }
-
+        .gene-card.selected { background-color: #d0d0d0; border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(155, 81, 224, 0.3); }
         .gene-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
         .gene-seq { font-family: monospace; color: #555; word-break: break-all; }
 
-        /* List View for Genes */
-        .gene-list-container {
-            display: none;
-            flex-direction: column;
-            width: 100%;
-            padding: 0 2rem;
-        }
-
-        .gene-list-item {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            margin-bottom: 10px;
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
+        .gene-list-container { display: none; flex-direction: column; width: 100%; padding: 0 2rem; }
+        .gene-list-item { background-color: #f8f9fa; border: 1px solid #dee2e6; margin-bottom: 10px; padding: 1rem 2rem; display: flex; align-items: center; border-radius: 8px; cursor: pointer; }
         .gene-list-item:hover { background-color: #e9ecef; }
         
-        /* Radio Button Custom */
-        .custom-radio {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid #999;
-            margin-right: 20px;
-            position: relative;
-            background: white;
-        }
-        
-        .custom-radio.selected {
-            border-color: var(--accent-purple);
-        }
-        
-        .custom-radio.selected::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
-            background-color: var(--accent-purple);
-            border-radius: 50%;
+        .custom-radio { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #999; margin-right: 20px; position: relative; background: white; }
+        .custom-radio.selected { border-color: var(--accent-purple); }
+        .custom-radio.selected::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; background-color: var(--accent-purple); border-radius: 50%; }
+        .gene-list-name { font-size: 1.2rem; font-weight: 500; }
+
+        /* --- Step 4: Scale Styles --- */
+        .scale-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            padding: 1rem;
+            background-color: #ccc; /* Light grey backdrop for the grid area per wireframe */
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 500px;
         }
 
-        .gene-list-name { font-size: 1.2rem; font-weight: 500; }
+        .scale-card {
+            background-color: white;
+            border-radius: 0; /* Boxy look */
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 180px;
+        }
+
+        .scale-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .scale-card.selected { border: 4px solid var(--accent-purple); }
+        .scale-icon { font-size: 3rem; margin-bottom: 1rem; color: #333; }
+        .scale-name { font-size: 1.2rem; font-weight: 500; }
+
+        /* --- Step 5: Nucleotide/Amino Acid Config Styles --- */
+        .config-dual-container {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .config-panel {
+            background-color: #ccc;
+            padding: 2rem;
+            border-radius: 8px;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .config-panel h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .config-row {
+            background-color: #eee;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 4px;
+        }
+
+        .config-label { font-size: 1.1rem; font-weight: 500; }
+        
+        .config-select {
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            background-color: #ddd;
+            width: 140px;
+        }
+
 
         footer { background-color: #999; color: white; padding: 1.5rem; text-align: center; font-size: 0.9rem; z-index: 10; }
 
@@ -593,7 +564,7 @@
             </div>
         </div>
 
-        <!-- === STEP 3: GENES (Sidebar Removed) === -->
+        <!-- === STEP 3: GENES === -->
         <div id="view-create-step-3" class="view-section wizard-container">
             <div class="wizard-header">
                 <h2 class="wizard-title">Genes</h2>
@@ -630,7 +601,64 @@
 
             <div class="wizard-footer">
                 <button class="btn-wizard" onclick="navigateTo('create-step-2')">Back</button>
-                <button class="btn-wizard" onclick="alert('Selected Gene: ' + (selectedGeneId ? 'Gene ' + selectedGeneId : 'None') + '. Proceeding...')">Next</button>
+                <button class="btn-wizard" onclick="navigateTo('create-step-4')">Next</button>
+            </div>
+        </div>
+
+        <!-- === STEP 4: CONFIGURATION (SCALE) === -->
+        <div id="view-create-step-4" class="view-section wizard-container">
+            <div class="wizard-header">
+                <h2 class="wizard-title">Configurations (Scale)</h2>
+            </div>
+
+            <!-- Search -->
+            <div class="wizard-search-container">
+                <h3 class="me-3 mb-0" style="font-weight: 700;">Key Scale</h3>
+                <div class="wizard-search">
+                    <i class="fa-solid fa-bars text-secondary me-2"></i>
+                    <input type="text" placeholder="Search Key Scale">
+                    <i class="fa-solid fa-magnifying-glass text-secondary"></i>
+                </div>
+            </div>
+
+            <!-- Scale Grid -->
+            <div class="scale-grid-container" id="scale-grid">
+                <!-- JS will inject scales -->
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-wizard" onclick="navigateTo('create-step-3')">Back</button>
+                <button class="btn-wizard" onclick="alert('Scale Selected. Proceeding...'); navigateTo('create-step-5')">Next</button>
+            </div>
+        </div>
+
+        <!-- === STEP 5: CONFIGURATION (NUCLEOTIDES & AMINO ACIDS) === -->
+        <div id="view-create-step-5" class="view-section wizard-container">
+            <div class="wizard-header">
+                <h2 class="wizard-title">Configurations</h2>
+            </div>
+
+            <div class="config-dual-container">
+                <!-- Nucleotides Panel -->
+                <div class="config-panel">
+                    <h3>Nucleotides</h3>
+                    <div id="nucleotide-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Amino Acids Panel -->
+                <div class="config-panel">
+                    <h3>Amino Acids</h3>
+                    <div id="amino-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-wizard" onclick="navigateTo('create-step-4')">Back</button>
+                <button class="btn-wizard" onclick="alert('Configuration Complete! Proceeding to Finalize...')">Next</button>
             </div>
         </div>
         
@@ -651,7 +679,7 @@
     <script>
         // --- State ---
         let currentStep = 0;
-        const totalSteps = 6;
+        const totalSteps = 6; // Updated to 6 steps
         
         // Data
         const phylogenies = [ { id: 1, title: 'Phylogeny 1' }, { id: 2, title: 'Phylogeny 2' }, { id: 3, title: 'Phylogeny 3' }, { id: 4, title: 'Phylogeny 4' }, { id: 5, title: 'Phylogeny 5' } ];
@@ -660,7 +688,6 @@
         const speciesData = [ { id: 1, name: 'Species 1' }, { id: 2, name: 'Species 2' }, { id: 3, name: 'Species 3' }, { id: 4, name: 'Species 4' }, { id: 5, name: 'Species 5' }, { id: 6, name: 'Species 6' }, { id: 7, name: 'Species 7' }, { id: 8, name: 'Species 8' } ];
         let selectedSpeciesIds = [];
 
-        // Genes Data (Mock)
         const genesData = [
             { id: 1, name: 'Gene 1', seq: '[ ATG ] [ CGA ] [ TAC ] [ AGG ] [ GTC ]' },
             { id: 2, name: 'Gene 2', seq: '[ GGC ] [ ATC ] [ GGG ] [ TTA ] [ CGC ]' },
@@ -670,6 +697,17 @@
             { id: 6, name: 'Gene 6', seq: '[ GGC ] [ ATC ] [ GGG ] [ TTA ] [ CGC ]' }
         ];
         let selectedGeneId = null;
+
+        const scalesData = [
+            { id: 'C', name: 'C Major' }, { id: 'G', name: 'G Major' },
+            { id: 'D', name: 'D Major' }, { id: 'A', name: 'A Major' },
+            { id: 'E', name: 'E Major' }, { id: 'B', name: 'B Major' },
+            { id: 'F', name: 'F Major' }, { id: 'Bb', name: 'Bb Major' }
+        ];
+        let selectedScaleId = null;
+
+        const nucleotides = ['Adenine', 'Thymine', 'Guanine', 'Cytosine'];
+        const aminoAcids = ['Polar', 'NonPolar', 'Acidic', 'Basic'];
 
         // --- Navigation ---
         function navigateTo(viewId) {
@@ -698,6 +736,8 @@
                 if (currentStep === 1) renderCarousel();
                 if (currentStep === 2) renderSpecies();
                 if (currentStep === 3) renderGenes();
+                if (currentStep === 4) renderScales();
+                if (currentStep === 5) renderConfig();
             } else if (viewId === 'load') {
                 currentStep = 0;
                 progressRing.style.display = 'none';
@@ -826,6 +866,50 @@
         function selectGene(id) {
             selectedGeneId = id; // Single select: just replace
             renderGenes();
+        }
+
+        // --- Step 4 Logic (Scale) ---
+        function renderScales() {
+            document.getElementById('scale-grid').innerHTML = scalesData.map(scale => {
+                const isSelected = (selectedScaleId === scale.id);
+                return `
+                <div class="scale-card ${isSelected ? 'selected' : ''}" onclick="selectScale('${scale.id}')">
+                    <i class="fa-solid fa-music scale-icon"></i>
+                    <div class="scale-name">${scale.name}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function selectScale(id) {
+            selectedScaleId = id;
+            renderScales();
+        }
+
+        // --- Step 5 Logic (Config) ---
+        function renderConfig() {
+            // Nucleotides
+            document.getElementById('nucleotide-container').innerHTML = nucleotides.map(n => `
+                <div class="config-row">
+                    <span class="config-label">${n}</span>
+                    <select class="config-select">
+                        <option>Note 1</option>
+                        <option>Note 2</option>
+                        <option>Note 3</option>
+                    </select>
+                </div>
+            `).join('');
+
+            // Amino Acids
+            document.getElementById('amino-container').innerHTML = aminoAcids.map(a => `
+                <div class="config-row">
+                    <span class="config-label">${a}</span>
+                    <select class="config-select">
+                        <option>Chord 1</option>
+                        <option>Chord 2</option>
+                        <option>Chord 3</option>
+                    </select>
+                </div>
+            `).join('');
         }
 
         // Initial Renders
