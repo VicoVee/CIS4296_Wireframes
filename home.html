@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genomic Orchestra</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #212529;
+            --secondary-gray: #d9d9d9;
+            --accent-color: #333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            padding: 1.5rem 2rem;
+            background: white;
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: serif; /* Mimicking the serif G in the wireframe */
+            display: flex;
+            align-items: center;
+        }
+        
+        .dna-icon {
+            font-size: 1.5rem;
+            margin-left: 5px;
+        }
+
+        .nav-link {
+            color: #333;
+            font-weight: 500;
+            margin: 0 10px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #333;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-top: 3rem;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-description {
+            max-width: 800px;
+            font-size: 1.25rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 4rem;
+            padding: 0 20px;
+        }
+
+        /* The Semi-Circle Background */
+        .dome-container {
+            width: 100%;
+            flex-grow: 1;
+            background-color: var(--secondary-gray);
+            border-top-left-radius: 50% 100%;
+            border-top-right-radius: 50% 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 0;
+            position: relative;
+            min-height: 500px; /* Ensure it's tall enough */
+            margin-top: auto; /* Push to bottom */
+        }
+
+        /* Buttons */
+        .action-btn {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            width: 350px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            transition: transform 0.2s, background-color 0.2s;
+            text-transform: capitalize;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            background-color: #000;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #999;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        /* View Switching Logic */
+        .view-section {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .view-section.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" onclick="navigateTo('home')">
+                G<i class="fa-solid fa-dna dna-icon"></i>
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Links Centered -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                </ul>
+            </div>
+
+            <!-- Profile Icon (Right) -->
+            <div class="user-avatar ms-auto">
+                <i class="fa-solid fa-user-doctor text-dark"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-container">
+        
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view-section active hero-section">
+            <h1 class="hero-title">Genomic Orchestra</h1>
+            <p class="hero-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac bibendum libero. 
+                Phasellus non erat et velit dapibus sollicitudin id sit amet lacus. Etiam urna sapien, 
+                lobortis vitae felis non, molestie hendrerit diam.
+            </p>
+
+            <div class="dome-container">
+                <button class="action-btn" onclick="navigateTo('create')">
+                    Create your Symphony
+                </button>
+                <button class="action-btn" onclick="navigateTo('load')">
+                    Load Symphonies
+                </button>
+            </div>
+        </div>
+
+        <!-- PLACEHOLDER: CREATE VIEW (For future steps) -->
+        <div id="view-create" class="view-section align-items-center justify-content-center" style="flex-grow:1; background: #f8f9fa;">
+            <div class="text-center">
+                <h2>Create Symphony Interface</h2>
+                <p>Coming in the next step...</p>
+                <button class="btn btn-secondary mt-3" onclick="navigateTo('home')">Back Home</button>
+            </div>
+        </div>
+
+        <!-- PLACEHOLDER: LOAD VIEW (For future steps) -->
+        <div id="view-load" class="view-section align-items-center justify-content-center" style="flex-grow:1; background: #f8f9fa;">
+            <div class="text-center">
+                <h2>Load Symphonies Interface</h2>
+                <p>Coming in the next step...</p>
+                <button class="btn btn-secondary mt-3" onclick="navigateTo('home')">Back Home</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        Footer Content HERE
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- App Logic -->
+    <script>
+        // Simple View Router
+        function navigateTo(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show target view
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) {
+                target.classList.add('active');
+            } else {
+                console.error(`View ${viewId} not found`);
+            }
+        }
+
+        // Initialize tooltip or other Bootstrap interactive components if needed
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+</body>
+</html>

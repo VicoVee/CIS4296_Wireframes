@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genomic Orchestra</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #212529;
+            --secondary-gray: #d9d9d9;
+            --accent-purple: #9b51e0;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: white;
+        }
+
+        /* --- Navbar Styling --- */
+        .navbar {
+            padding: 1.5rem 2rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: serif; 
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 60px;
+            height: 60px;
+            justify-content: center;
+        }
+        
+        .dna-icon {
+            font-size: 1.5rem;
+            margin-left: 2px;
+        }
+
+        /* Radial Progress Bar */
+        .logo-progress-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+            pointer-events: none;
+            display: none;
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+            stroke: var(--accent-purple);
+            stroke-width: 4;
+            fill: transparent;
+            opacity: 0.5;
+        }
+
+        .progress-ring__bg {
+            stroke: #e0e0e0;
+            stroke-width: 4;
+            fill: transparent;
+        }
+
+        .nav-link { color: #333; font-weight: 500; margin: 0 10px; }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #333;
+            cursor: pointer;
+        }
+
+        /* --- Global Layout Utils --- */
+        .view-section {
+            display: none !important; 
+            width: 100%;
+            flex-grow: 1;
+            flex-direction: column;
+        }
+        
+        .view-section.active { 
+            display: flex !important; 
+        }
+
+        /* --- Home View --- */
+        .hero-section {
+            align-items: center;
+            text-align: center;
+            padding-top: 3rem;
+            position: relative;
+        }
+
+        .hero-title { font-size: 3.5rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -1px; }
+        .hero-description { max-width: 800px; font-size: 1.25rem; color: #555; line-height: 1.6; margin-bottom: 4rem; padding: 0 20px; }
+
+        .dome-container {
+            width: 100%;
+            flex-grow: 1;
+            background-color: var(--secondary-gray);
+            border-top-left-radius: 50% 100%;
+            border-top-right-radius: 50% 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 0;
+            position: relative;
+            min-height: 500px;
+            margin-top: auto;
+        }
+
+        .action-btn {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            width: 350px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            transition: transform 0.2s, background-color 0.2s;
+            text-transform: capitalize;
+        }
+        .action-btn:hover { transform: translateY(-3px); background-color: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+        /* --- Wizard Common --- */
+        .wizard-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wizard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .wizard-title { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; }
+        
+        .wizard-search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 2rem;
+            gap: 20px;
+        }
+
+        .wizard-search {
+            background: #e9ecef;
+            border-radius: 30px;
+            padding: 0.8rem 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            border: none;
+            display: flex;
+            align-items: center;
+        }
+        .wizard-search input { border: none; background: transparent; width: 100%; outline: none; margin-left: 10px; color: #555; }
+
+        .view-toggle-btn {
+            background: #e9ecef;
+            border-radius: 30px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+        
+        .toggle-option {
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #777;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .toggle-option.active {
+            background-color: #7a6aa6;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .wizard-footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding: 2rem 0;
+        }
+        .btn-wizard {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 0.8rem 3rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .btn-wizard:hover { background-color: #000; }
+
+        /* --- Step 1: Carousel --- */
+        .phylogeny-carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            height: 450px;
+            perspective: 1000px;
+        }
+        .phylo-card {
+            width: 300px;
+            height: 380px;
+            background: #d9d9d9;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            transition: all 0.5s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .phylo-card.active { z-index: 10; transform: scale(1.1) translateX(0); background: #e0e0e0; border: 2px solid #333; opacity: 1; }
+        .phylo-card.prev { z-index: 5; transform: scale(0.85) translateX(-120%); opacity: 0.6; background: #999; }
+        .phylo-card.next { z-index: 5; transform: scale(0.85) translateX(120%); opacity: 0.6; background: #999; }
+        .phylo-card.hidden { opacity: 0; pointer-events: none; transform: scale(0.5); z-index: 0; }
+        
+        .phylo-image-placeholder {
+            width: 80%;
+            height: 60%;
+            border: 2px solid #555;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .nav-arrow {
+            font-size: 3rem;
+            color: #333;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+        }
+        .nav-arrow:hover { transform: translateY(-50%) scale(1.1); }
+        .arrow-left { left: 10%; }
+        .arrow-right { right: 10%; }
+
+        /* --- Step 2: Species --- */
+        .species-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            padding: 1rem;
+        }
+        .species-card-grid {
+            background-color: transparent;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-align: center;
+            position: relative;
+        }
+        .species-card-grid:hover { transform: translateY(-5px); }
+        .species-card-grid.selected .img-box { border-color: var(--accent-purple); box-shadow: 0 0 0 4px var(--accent-purple); }
+        .species-card-grid.selected::after { content: '✓'; position: absolute; top: 10px; right: 15px; background: var(--accent-purple); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .species-card-grid .img-box { background-color: #e0e0e0; height: 200px; width: 100%; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: 2px solid transparent; margin-bottom: 10px; position: relative; transition: all 0.2s; }
+        .species-card-grid .img-box i { font-size: 3rem; color: #777; }
+        
+        .species-list-container { display: none; width: 100%; display: flex; gap: 2rem; height: 500px; }
+        .list-column { flex: 1; overflow-y: auto; padding-right: 10px; }
+        .preview-column { flex: 1; background: #ccc; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; }
+        
+        .list-item { background: #e9ecef; margin-bottom: 1rem; padding: 1rem; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; transition: background 0.2s; }
+        .list-item:hover { background: #dee2e6; }
+        .list-item-left { display: flex; align-items: center; gap: 15px; width: 100%; cursor: pointer;}
+        .custom-checkbox { width: 24px; height: 24px; background: white; border: 2px solid #999; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        .custom-checkbox.checked { background: var(--accent-purple); border-color: var(--accent-purple); }
+        .custom-checkbox.checked::after { content: '✔'; color: white; font-size: 14px; }
+        .btn-view-details { background: #333; color: white; border: none; padding: 0.4rem 1rem; border-radius: 4px; font-size: 0.85rem; white-space: nowrap; }
+        .preview-img-large { width: 200px; height: 200px; border: 3px solid #333; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+
+        /* --- Step 3: Genes --- */
+        .gene-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .gene-card {
+            background-color: #d9d9d9;
+            border-radius: 50px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .gene-card:hover { background-color: #ccc; }
+        .gene-card.selected { background-color: #d0d0d0; border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(155, 81, 224, 0.3); }
+        .gene-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .gene-seq { font-family: monospace; color: #555; word-break: break-all; }
+
+        .gene-list-container { display: none; flex-direction: column; width: 100%; padding: 0 2rem; }
+        .gene-list-item { background-color: #f8f9fa; border: 1px solid #dee2e6; margin-bottom: 10px; padding: 1rem 2rem; display: flex; align-items: center; border-radius: 8px; cursor: pointer; }
+        .gene-list-item:hover { background-color: #e9ecef; }
+        
+        .custom-radio { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #999; margin-right: 20px; position: relative; background: white; }
+        .custom-radio.selected { border-color: var(--accent-purple); }
+        .custom-radio.selected::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; background-color: var(--accent-purple); border-radius: 50%; }
+        .gene-list-name { font-size: 1.2rem; font-weight: 500; }
+
+        /* --- Step 4: Scale Styles --- */
+        .scale-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            padding: 1rem;
+            background-color: #ccc; /* Light grey backdrop for the grid area per wireframe */
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .scale-card {
+            background-color: white;
+            border-radius: 0; /* Boxy look */
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 180px;
+        }
+
+        .scale-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .scale-card.selected { border: 4px solid var(--accent-purple); }
+        .scale-icon { font-size: 3rem; margin-bottom: 1rem; color: #333; }
+        .scale-name { font-size: 1.2rem; font-weight: 500; }
+
+        /* --- Step 5: Nucleotide/Amino Acid Config Styles --- */
+        .config-dual-container {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .config-panel {
+            background-color: #ccc;
+            padding: 2rem;
+            border-radius: 8px;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .config-panel h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .config-row {
+            background-color: #eee;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 4px;
+        }
+
+        .config-label { font-size: 1.1rem; font-weight: 500; }
+        
+        .config-select {
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            background-color: #ddd;
+            width: 140px;
+        }
+
+
+        footer { background-color: #999; color: white; padding: 1.5rem; text-align: center; font-size: 0.9rem; z-index: 10; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+             <div class="logo-progress-container">
+                <svg class="progress-ring" width="70" height="70" id="progressRing">
+                    <circle class="progress-ring__bg" stroke-dasharray="200" stroke-dashoffset="0" cx="35" cy="35" r="30" />
+                    <circle class="progress-ring__circle" stroke-dasharray="200" stroke-dashoffset="200" cx="35" cy="35" r="30" id="progressCircle" />
+                </svg>
+                <a class="navbar-brand m-0" href="#" onclick="navigateTo('home')">
+                    G<i class="fa-solid fa-dna dna-icon"></i>
+                </a>
+             </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navLinksContainer">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                </ul>
+            </div>
+
+            <div class="user-avatar ms-auto">
+                <i class="fa-solid fa-user-doctor text-dark"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-container">
+        
+        <!-- === HOME VIEW === -->
+        <div id="view-home" class="view-section active hero-section">
+            <h1 class="hero-title">Genomic Orchestra</h1>
+            <p class="hero-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac bibendum libero. 
+                Phasellus non erat et velit dapibus sollicitudin id sit amet lacus.
+            </p>
+            <div class="dome-container">
+                <button class="action-btn" onclick="navigateTo('create-step-1')">Create your Symphony</button>
+                <button class="action-btn" onclick="navigateTo('load')">Load Symphonies</button>
+            </div>
+        </div>
+
+        <!-- === STEP 1: PHYLOGENY === -->
+        <div id="view-create-step-1" class="view-section wizard-container">
+            <div class="wizard-header">
+                <h2 class="wizard-title">Phylogeny</h2>
+                <p class="text-muted">Select the base phylogeny for your creation.</p>
+            </div>
+
+            <div class="wizard-search-container">
+                <div class="wizard-search">
+                    <i class="fa-solid fa-bars text-secondary me-2"></i>
+                    <input type="text" placeholder="Hinted search text">
+                    <i class="fa-solid fa-magnifying-glass text-secondary"></i>
+                </div>
+            </div>
+
+            <div class="phylogeny-carousel">
+                <i class="fa-solid fa-arrow-left nav-arrow arrow-left" onclick="moveCarousel(-1)"></i>
+                <div id="card-container" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"></div>
+                <i class="fa-solid fa-arrow-right nav-arrow arrow-right" onclick="moveCarousel(1)"></i>
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-wizard" onclick="navigateTo('home')">Back</button>
+                <button class="btn-wizard" onclick="navigateTo('create-step-2')">Next</button>
+            </div>
+        </div>
+
+        <!-- === STEP 2: SPECIES === -->
+        <div id="view-create-step-2" class="view-section wizard-container">
+            <div class="wizard-header">
+                <h2 class="wizard-title">Species</h2>
+                <p class="text-muted">Select one or multiple species.</p>
+            </div>
+
+            <!-- Search + Toggle Row -->
+            <div class="wizard-search-container">
+                <div class="wizard-search">
+                    <i class="fa-solid fa-bars text-secondary me-2"></i>
+                    <input type="text" placeholder="Hinted search text">
+                    <i class="fa-solid fa-magnifying-glass text-secondary"></i>
+                </div>
+                
+                <div class="view-toggle-btn">
+                    <div class="toggle-option active" id="toggle-cards-s2" onclick="toggleSpeciesView('cards')">
+                        <i class="fa-solid fa-grip"></i> Cards
+                    </div>
+                    <div class="toggle-option" id="toggle-lists-s2" onclick="toggleSpeciesView('lists')">
+                        <i class="fa-solid fa-list"></i> Lists
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENT: Grid View -->
+            <div id="species-grid" class="species-grid-container">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- CONTENT: List View -->
+            <div id="species-list" class="species-list-container" style="display: none;">
+                <div class="list-column" id="species-list-items"></div>
+                <div class="preview-column">
+                    <div class="preview-img-large"><i class="fa-regular fa-image fa-4x text-secondary"></i></div>
+                    <h3 id="preview-title">Select a Species</h3>
+                    <p class="text-muted" style="font-size: 0.9rem;">Click "View Details" to see more information.</p>
+                </div>
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-wizard" onclick="navigateTo('create-step-1')">Back</button>
+                <button class="btn-wizard" onclick="navigateTo('create-step-3')">Next</button>
+            </div>
+        </div>
+
+        <!-- === STEP 3: GENES === -->
+        <div id="view-create-step-3" class="view-section wizard-container">
+            <div class="wizard-header">
+                <h2 class="wizard-title">Genes</h2>
+                <p class="text-muted">Select a gene sequence.</p>
+            </div>
+
+            <!-- Search + Toggle -->
+            <div class="wizard-search-container">
+                <div class="wizard-search">
+                    <i class="fa-solid fa-bars text-secondary me-2"></i>
+                    <input type="text" placeholder="Hinted search text">
+                    <i class="fa-solid fa-magnifying-glass text-secondary"></i>
+                </div>
+                
+                <div class="view-toggle-btn">
+                    <div class="toggle-option active" id="toggle-cards-s3" onclick="toggleGeneView('cards')">
+                        <i class="fa-solid fa-grip"></i> Cards
+                    </div>
+                    <div class="toggle-option" id="toggle-lists-s3" onclick="toggleGeneView('lists')">
+                        <i class="fa-solid fa-list"></i> Lists
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid View (Pills) -->
+            <div id="gene-grid" class="gene-grid-container">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- List View -->
+            <div id="gene-list" class="gene-list-container">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-wizard" onclick="navigateTo('create-step-2')">Back</button>
+                <button class="btn-wizard" onclick="navigateTo('create-step-4')">Next</button>
+            </div>
+        </div>
+
+        <!-- === STEP 4: CONFIGURATION (SCALE) === -->
+        <div id="view-create-step-4" class="view-section wizard-container">
+            <div class="wizard-header">
+                <h2 class="wizard-title">Configurations (Scale)</h2>
+            </div>
+
+            <!-- Search -->
+            <div class="wizard-search-container">
+                <h3 class="me-3 mb-0" style="font-weight: 700;">Key Scale</h3>
+                <div class="wizard-search">
+                    <i class="fa-solid fa-bars text-secondary me-2"></i>
+                    <input type="text" placeholder="Search Key Scale">
+                    <i class="fa-solid fa-magnifying-glass text-secondary"></i>
+                </div>
+            </div>
+
+            <!-- Scale Grid -->
+            <div class="scale-grid-container" id="scale-grid">
+                <!-- JS will inject scales -->
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-wizard" onclick="navigateTo('create-step-3')">Back</button>
+                <button class="btn-wizard" onclick="alert('Scale Selected. Proceeding...'); navigateTo('create-step-5')">Next</button>
+            </div>
+        </div>
+
+        <!-- === STEP 5: CONFIGURATION (NUCLEOTIDES & AMINO ACIDS) === -->
+        <div id="view-create-step-5" class="view-section wizard-container">
+            <div class="wizard-header">
+                <h2 class="wizard-title">Configurations</h2>
+            </div>
+
+            <div class="config-dual-container">
+                <!-- Nucleotides Panel -->
+                <div class="config-panel">
+                    <h3>Nucleotides</h3>
+                    <div id="nucleotide-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Amino Acids Panel -->
+                <div class="config-panel">
+                    <h3>Amino Acids</h3>
+                    <div id="amino-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-wizard" onclick="navigateTo('create-step-4')">Back</button>
+                <button class="btn-wizard" onclick="alert('Configuration Complete! Proceeding to Finalize...')">Next</button>
+            </div>
+        </div>
+        
+        <!-- PLACEHOLDER: LOAD VIEW -->
+        <div id="view-load" class="view-section align-items-center justify-content-center" style="flex-grow:1; background: #f8f9fa;">
+            <div class="text-center">
+                <h2>Load Symphonies Interface</h2>
+                <button class="btn btn-secondary mt-3" onclick="navigateTo('home')">Back Home</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>Footer Content HERE</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- State ---
+        let currentStep = 0;
+        const totalSteps = 6; // Updated to 6 steps
+        
+        // Data
+        const phylogenies = [ { id: 1, title: 'Phylogeny 1' }, { id: 2, title: 'Phylogeny 2' }, { id: 3, title: 'Phylogeny 3' }, { id: 4, title: 'Phylogeny 4' }, { id: 5, title: 'Phylogeny 5' } ];
+        let currentCardIndex = 0;
+
+        const speciesData = [ { id: 1, name: 'Species 1' }, { id: 2, name: 'Species 2' }, { id: 3, name: 'Species 3' }, { id: 4, name: 'Species 4' }, { id: 5, name: 'Species 5' }, { id: 6, name: 'Species 6' }, { id: 7, name: 'Species 7' }, { id: 8, name: 'Species 8' } ];
+        let selectedSpeciesIds = [];
+
+        const genesData = [
+            { id: 1, name: 'Gene 1', seq: '[ ATG ] [ CGA ] [ TAC ] [ AGG ] [ GTC ]' },
+            { id: 2, name: 'Gene 2', seq: '[ GGC ] [ ATC ] [ GGG ] [ TTA ] [ CGC ]' },
+            { id: 3, name: 'Gene 3', seq: '[ TTT ] [ AAA ] [ CCC ] [ GGG ] [ TAC ]' },
+            { id: 4, name: 'Gene 4', seq: '[ CTA ] [ GCT ] [ AGT ] [ CGT ] [ TGA ]' },
+            { id: 5, name: 'Gene 5', seq: '[ ATG ] [ CGA ] [ TAC ] [ AGG ] [ GTC ]' },
+            { id: 6, name: 'Gene 6', seq: '[ GGC ] [ ATC ] [ GGG ] [ TTA ] [ CGC ]' }
+        ];
+        let selectedGeneId = null;
+
+        const scalesData = [
+            { id: 'C', name: 'C Major' }, { id: 'G', name: 'G Major' },
+            { id: 'D', name: 'D Major' }, { id: 'A', name: 'A Major' },
+            { id: 'E', name: 'E Major' }, { id: 'B', name: 'B Major' },
+            { id: 'F', name: 'F Major' }, { id: 'Bb', name: 'Bb Major' }
+        ];
+        let selectedScaleId = null;
+
+        const nucleotides = ['Adenine', 'Thymine', 'Guanine', 'Cytosine'];
+        const aminoAcids = ['Polar', 'NonPolar', 'Acidic', 'Basic'];
+
+        // --- Navigation ---
+        function navigateTo(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => { el.classList.remove('active'); });
+            
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) target.classList.add('active');
+
+            const progressRing = document.getElementById('progressRing');
+            const navLinks = document.getElementById('navLinksContainer');
+
+            if (viewId === 'home') {
+                currentStep = 0;
+                progressRing.style.display = 'none';
+                if(navLinks) navLinks.style.opacity = '1';
+                
+            } else if (viewId.startsWith('create-step')) {
+                const stepNum = parseInt(viewId.split('-').pop());
+                currentStep = stepNum;
+                
+                progressRing.style.display = 'block';
+                updateProgress(currentStep, totalSteps);
+                if(navLinks) navLinks.style.opacity = '0'; 
+
+                // Init Views
+                if (currentStep === 1) renderCarousel();
+                if (currentStep === 2) renderSpecies();
+                if (currentStep === 3) renderGenes();
+                if (currentStep === 4) renderScales();
+                if (currentStep === 5) renderConfig();
+            } else if (viewId === 'load') {
+                currentStep = 0;
+                progressRing.style.display = 'none';
+            }
+        }
+
+        // --- Radial Progress ---
+        function updateProgress(step, total) {
+            const circle = document.getElementById('progressCircle');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            const percent = step / total;
+            const offset = circumference - (percent * circumference);
+            circle.style.strokeDashoffset = offset;
+        }
+
+        // --- Step 1 Logic (Carousel) ---
+        function renderCarousel() {
+            const container = document.getElementById('card-container');
+            container.innerHTML = '';
+            phylogenies.forEach((phylo, index) => {
+                const card = document.createElement('div');
+                card.className = `phylo-card ${getCardClass(index)}`;
+                card.innerHTML = `<h3>${phylo.title}</h3><div class="phylo-image-placeholder"><i class="fa-regular fa-image fa-3x text-secondary"></i></div>`;
+                container.appendChild(card);
+            });
+        }
+        function getCardClass(index) {
+            if (index === currentCardIndex) return 'active';
+            if (index === currentCardIndex - 1) return 'prev';
+            if (index === currentCardIndex + 1) return 'next';
+            return 'hidden';
+        }
+        function moveCarousel(dir) {
+            const next = currentCardIndex + dir;
+            if (next >= 0 && next < phylogenies.length) {
+                currentCardIndex = next;
+                renderCarousel();
+            }
+        }
+
+        // --- Step 2 Logic (Species - Multi Select) ---
+        function toggleSpeciesView(type) {
+            const grid = document.getElementById('species-grid');
+            const list = document.getElementById('species-list');
+            const btnCards = document.getElementById('toggle-cards-s2');
+            const btnLists = document.getElementById('toggle-lists-s2');
+
+            if (type === 'cards') {
+                grid.style.display = 'grid'; list.style.display = 'none';
+                btnCards.classList.add('active'); btnLists.classList.remove('active');
+            } else {
+                grid.style.display = 'none'; list.style.display = 'flex';
+                btnCards.classList.remove('active'); btnLists.classList.add('active');
+            }
+        }
+
+        function renderSpecies() {
+            // Grid
+            document.getElementById('species-grid').innerHTML = speciesData.map(s => {
+                const isSelected = selectedSpeciesIds.includes(s.id);
+                return `<div class="species-card-grid ${isSelected ? 'selected' : ''}" onclick="toggleSpeciesSelection(${s.id})">
+                    <div class="img-box"><i class="fa-regular fa-image"></i></div>
+                    <h5>${s.name}</h5>
+                </div>`
+            }).join('');
+            // List
+            document.getElementById('species-list-items').innerHTML = speciesData.map(s => {
+                const isSelected = selectedSpeciesIds.includes(s.id);
+                return `<div class="list-item">
+                    <div class="list-item-left" onclick="toggleSpeciesSelection(${s.id})">
+                        <div class="custom-checkbox ${isSelected ? 'checked' : ''}"></div><h5 class="m-0">${s.name}</h5>
+                    </div>
+                    <button class="btn-view-details" onclick="previewSpecies(${s.id}); event.stopPropagation();">View Details</button>
+                </div>`
+            }).join('');
+        }
+
+        function toggleSpeciesSelection(id) {
+            if (selectedSpeciesIds.includes(id)) selectedSpeciesIds = selectedSpeciesIds.filter(itemId => itemId !== id);
+            else selectedSpeciesIds.push(id);
+            renderSpecies();
+        }
+        function previewSpecies(id) {
+            const species = speciesData.find(s => s.id === id);
+            if(species) document.getElementById('preview-title').innerText = species.name;
+        }
+
+        // --- Step 3 Logic (Genes - Single Select) ---
+        function toggleGeneView(type) {
+            const grid = document.getElementById('gene-grid');
+            const list = document.getElementById('gene-list');
+            const btnCards = document.getElementById('toggle-cards-s3');
+            const btnLists = document.getElementById('toggle-lists-s3');
+
+            if (type === 'cards') {
+                grid.style.display = 'grid'; list.style.display = 'none';
+                btnCards.classList.add('active'); btnLists.classList.remove('active');
+            } else {
+                grid.style.display = 'none'; list.style.display = 'flex';
+                btnCards.classList.remove('active'); btnLists.classList.add('active');
+            }
+        }
+
+        function renderGenes() {
+            // Grid View
+            document.getElementById('gene-grid').innerHTML = genesData.map(g => {
+                const isSelected = (selectedGeneId === g.id);
+                return `<div class="gene-card ${isSelected ? 'selected' : ''}" onclick="selectGene(${g.id})">
+                    <div class="gene-title">${g.name}</div>
+                    <div class="gene-seq">${g.seq}</div>
+                </div>`;
+            }).join('');
+
+            // List View
+            document.getElementById('gene-list').innerHTML = genesData.map(g => {
+                const isSelected = (selectedGeneId === g.id);
+                return `<div class="gene-list-item" onclick="selectGene(${g.id})">
+                    <div class="custom-radio ${isSelected ? 'selected' : ''}"></div>
+                    <div class="gene-list-name">${g.name}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function selectGene(id) {
+            selectedGeneId = id; // Single select: just replace
+            renderGenes();
+        }
+
+        // --- Step 4 Logic (Scale) ---
+        function renderScales() {
+            document.getElementById('scale-grid').innerHTML = scalesData.map(scale => {
+                const isSelected = (selectedScaleId === scale.id);
+                return `
+                <div class="scale-card ${isSelected ? 'selected' : ''}" onclick="selectScale('${scale.id}')">
+                    <i class="fa-solid fa-music scale-icon"></i>
+                    <div class="scale-name">${scale.name}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function selectScale(id) {
+            selectedScaleId = id;
+            renderScales();
+        }
+
+        // --- Step 5 Logic (Config) ---
+        function renderConfig() {
+            // Nucleotides
+            document.getElementById('nucleotide-container').innerHTML = nucleotides.map(n => `
+                <div class="config-row">
+                    <span class="config-label">${n}</span>
+                    <select class="config-select">
+                        <option>Note 1</option>
+                        <option>Note 2</option>
+                        <option>Note 3</option>
+                    </select>
+                </div>
+            `).join('');
+
+            // Amino Acids
+            document.getElementById('amino-container').innerHTML = aminoAcids.map(a => `
+                <div class="config-row">
+                    <span class="config-label">${a}</span>
+                    <select class="config-select">
+                        <option>Chord 1</option>
+                        <option>Chord 2</option>
+                        <option>Chord 3</option>
+                    </select>
+                </div>
+            `).join('');
+        }
+
+        // Initial Renders
+        renderSpecies();
+        renderGenes();
+
+    </script>
+</body>
+</html>
